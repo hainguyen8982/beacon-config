@@ -284,6 +284,13 @@
             <span id="batteryVal">--%</span> Pin (ADC)
         </div>
     </div>
+    <div class="glass-panel" style="margin-top: 10px; margin-bottom: 15px; padding: 15px;">
+        <label for="filterPrefix" style="margin-top: 0; margin-bottom: 6px; font-size: 11px; color: var(--accent);">Tiền tố tên lọc thiết bị (Filter Prefix)</label>
+        <input type="text" id="filterPrefix" value="VNG" placeholder="Để trống để hiển thị tất cả thiết bị..." style="padding: 10px 14px; font-size: 14px; border-radius: 8px;">
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; text-align: left;">
+            💡 Nên nhập chữ cái đầu của Beacon (ví dụ: <b>VNG</b> hoặc <b>Phong</b>) để điện thoại giải mã đúng tên và ẩn 100% thiết bị rác xung quanh!
+        </div>
+    </div>
     
     <button id="btnConnect" class="btn btn-primary">⚡ Quét & Kết Nối Beacon</button>
     
@@ -395,12 +402,22 @@
         try {
             statusText.innerText = "Đang tìm kiếm Beacon...";
             
-            // Lọc bằng Service UUID định danh 16-bit (0x1234) trong Scan Response.
-            // Giải pháp tối thượng: Quét được mọi thiết bị Beacon bất kể tên gì, đồng thời lọc sạch 100% rác!
-            bleDevice = await navigator.bluetooth.requestDevice({
-                filters: [{ services: [FILTER_SERVICE_UUID] }],
-                optionalServices: [SERVICE_UUID, BATT_SERVICE]
-            });
+            const prefixVal = document.getElementById('filterPrefix').value.trim();
+            let scanOptions = {};
+            
+            if (prefixVal) {
+                scanOptions = {
+                    filters: [{ namePrefix: prefixVal }],
+                    optionalServices: [SERVICE_UUID, BATT_SERVICE]
+                };
+            } else {
+                scanOptions = {
+                    acceptAllDevices: true,
+                    optionalServices: [SERVICE_UUID, BATT_SERVICE]
+                };
+            }
+            
+            bleDevice = await navigator.bluetooth.requestDevice(scanOptions);
 
             statusText.innerText = "Đang kết nối...";
             statusDot.className = "status-dot connected";
