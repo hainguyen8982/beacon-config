@@ -394,9 +394,12 @@
         try {
             statusText.innerText = "Đang tìm kiếm Beacon...";
             
-            // Dùng acceptAllDevices: true để tương thích tốt nhất trên điện thoại di động
+            // Lọc thông minh theo tiền tố tên để ép điện thoại giải mã đúng tên và lọc sạch thiết bị rác
             bleDevice = await navigator.bluetooth.requestDevice({
-                acceptAllDevices: true,
+                filters: [
+                    { namePrefix: "VNG" },
+                    { namePrefix: "Phong" }
+                ],
                 optionalServices: [SERVICE_UUID, BATT_SERVICE]
             });
 
