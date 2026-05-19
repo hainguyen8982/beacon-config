@@ -284,7 +284,7 @@
             <span id="batteryVal">--%</span> Pin (ADC)
         </div>
     </div>
-    <div class="glass-panel" style="margin-top: 10px; margin-bottom: 15px; padding: 15px;">
+    <div id="filterContainer" class="glass-panel" style="margin-top: 10px; margin-bottom: 15px; padding: 15px;">
         <label for="filterPrefix" style="margin-top: 0; margin-bottom: 6px; font-size: 11px; color: var(--accent);">Tiền tố tên lọc thiết bị (Filter Prefix)</label>
         <input type="text" id="filterPrefix" value="VNG" placeholder="Để trống để hiển thị tất cả thiết bị..." style="padding: 10px 14px; font-size: 14px; border-radius: 8px;">
         <div style="font-size: 11px; color: var(--text-muted); margin-top: 6px; text-align: left;">
@@ -463,6 +463,7 @@
 
             statusText.innerText = `Đã kết nối: ${bleDevice.name}`;
             btnConnect.style.display = "none";
+            document.getElementById('filterContainer').style.display = "none";
             configForm.style.display = "block";
 
             bleDevice.addEventListener('gattserverdisconnected', onDisconnected);
@@ -632,6 +633,7 @@
         statusText.innerText = "Đã ngắt kết nối";
         statusDot.className = "status-dot";
         btnConnect.style.display = "block";
+        document.getElementById('filterContainer').style.display = "block";
         configForm.style.display = "none";
         batteryBadge.classList.remove('show');
     }
